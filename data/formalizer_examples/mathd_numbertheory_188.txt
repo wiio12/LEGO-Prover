@@ -1,0 +1,29 @@
+## Problems
+Find the greatest common factor of 180 and 168. Show that it is 12.
+
+## Informal proof
+Step 1: This is true by simple evaluation.
+
+## Ori informal proof
+This is true by simple evaluation.
+
+## Formal statement
+```isabelle
+theorem mathd_numbertheory_188:
+  "gcd 180 168 = (12::nat)"
+  sledgehammer
+```
+
+## Proof
+```isabelle
+theory mathd_numbertheory_188
+imports Complex_Main
+begin
+
+(* formal statement copy from the input *)
+theorem
+  "gcd 180 168 = (12::nat)"
+  sledgehammer
+
+end
+```

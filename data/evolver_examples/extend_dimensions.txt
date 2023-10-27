@@ -1,0 +1,230 @@
+## Skill to evolve
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+lemma mathd_numbertheory_001:
+  fixes n :: nat
+  shows "n mod 3 = 0 \<or> n mod 3 = 1 \<or> n mod 3 = 2"
+by auto
+
+end
+```
+
+## Evolved skill
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+lemma remainder_modulo:
+  fixes n d :: nat
+  assumes "d > 0"
+  shows "n mod d \<in> {0..d-1}"
+proof -
+  have "n mod d < d" by (rule mod_less_divisor[OF assms(1)])
+  moreover have "n mod d \<ge> 0" by simp
+  ultimately show ?thesis by auto
+qed
+
+end
+```
+
+
+<split>
+
+
+
+## Skill to evolve
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+lemma complex_multiplication_distributive:
+  fixes a b c x:: complex
+  shows "a*(b*x + c) = a*b*x + a*c"
+proof -
+  have "a*(b*x + c) = a*b*x + a*c" by (simp add: field_simps)
+  then show ?thesis by simp
+qed
+
+end
+```
+
+## Evolved skill
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+fun complex_sum :: "complex list \<Rightarrow> complex" where
+  "complex_sum [] = 0" |
+  "complex_sum (x # xs) = x + complex_sum xs"
+
+lemma complex_sum_scalar_distributivity:
+  fixes a :: complex
+  fixes xs :: "complex list"
+shows "a * complex_sum xs = complex_sum (map (\<lambda>x. a * x) xs)"
+proof (induction xs)
+  case Nil
+  then show ?case 
+    by simp
+next
+  case (Cons x xs)
+  then show ?case 
+    by (auto simp: field_simps)
+qed
+
+end
+```
+
+
+
+<split>
+
+
+
+## Skill to evolve
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+definition function_composition :: "('b \<Rightarrow> 'c) \<Rightarrow> ('a \<Rightarrow> 'b) \<Rightarrow> 'a \<Rightarrow> 'c" (infixr "\<circ>\<^sub>f" 55) where
+"function_composition g f x = g (f x)"
+
+end
+```
+
+## Evolved skill
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+definition function_composition :: "('b \<Rightarrow> 'c) \<Rightarrow> ('a \<Rightarrow> 'b) \<Rightarrow> 'a \<Rightarrow> 'c" (infixr "\<circ>\<^sub>f" 55) where
+"function_composition g f x = g (f x)"
+
+primrec function_composition_multi :: "('a \<Rightarrow> 'a) list \<Rightarrow> 'a \<Rightarrow> 'a" (infixr "\<circ>\<^sub>f\<^sub>m\<^sub>u\<^sub>l\<^sub>t\<^sub>i" 55) where
+"function_composition_multi [] x = x" |
+"function_composition_multi (f#fs) x = f (function_composition_multi fs x)"
+
+end
+```
+
+
+<split>
+
+
+
+## Skill to evolve
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+lemma mathd_numbertheory_001:
+  fixes n :: nat
+  shows "n mod 3 = 0 \<or> n mod 3 = 1 \<or> n mod 3 = 2"
+by auto
+
+end
+```
+
+## Evolved skill
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+lemma remainder_modulo:
+  fixes n d :: nat
+  assumes "d > 0"
+  shows "n mod d \<in> {0..d-1}"
+proof -
+  have "n mod d < d" by (rule mod_less_divisor[OF assms(1)])
+  moreover have "n mod d \<ge> 0" by simp
+  ultimately show ?thesis by auto
+qed
+
+end
+```
+
+
+<split>
+
+
+## Skill to evolve
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+lemma multi_distrib_complex_scaled_simple:
+  fixes a b c d :: complex
+  shows "(a + b) * (c + d) = a * c + a * d + b * c + b * d"
+by (simp add: distrib_left distrib_right)
+
+end
+```
+
+## Evolved skill
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+lemma sum_scalar_multiplication_distribution:
+  fixes a :: complex
+  assumes "finite A"
+  shows "(\<Sum>i\<in>A. a * i) * b = (\<Sum>i\<in>A. (a * i) * b)"
+by (metis sum_distrib_right)
+
+end
+```
+
+<split>
+
+
+## Skill to evolve
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+lemma dvd_k_times_polynomial:
+  fixes n k :: int
+  assumes "k > 0"
+  shows "k dvd (k * n^2 + k * n + k)"
+proof -
+  have "k * n^2 + k * n + k = k * (n^2 + n + 1)"
+    by (simp add: algebra_simps)
+  then show ?thesis by simp
+qed
+
+end
+```
+
+
+## Evolved skill
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+lemma dvd_diagonal_matrix_sum_entries:
+  fixes k n :: nat
+  assumes "k > 0"
+  shows "k dvd (\<Sum>i\<in>{1..n}. \<Sum>j\<in>{1..n}. if i = j then k else 0)"
+proof -
+  have "(\<Sum>i\<in>{1..n}. \<Sum>j\<in>{1..n}. if i = j then k else 0) = (\<Sum>i\<in>{1..n}. k)"
+    by (simp add: sum.If_cases)
+  also have "... = k * n" by simp
+  finally show ?thesis using assms by simp
+qed
+
+end
+```
+

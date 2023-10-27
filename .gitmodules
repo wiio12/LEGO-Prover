@@ -1,0 +1,4 @@
+[submodule "lego_prover/env/Portal-to-ISAbelle"]
+	path = lego_prover/env/Portal-to-ISAbelle
+	url = https://github.com/wiio12/Portal-to-ISAbelle.git
+	branch = Isabelle2022

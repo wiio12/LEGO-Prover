@@ -1,0 +1,101 @@
+## Problems
+Suppose that $x,$ $y,$ and $z$ are three positive numbers that satisfy the equations $xyz = 1,$ $x + \frac {1}{z} = 5,$ and $y + \frac {1}{x} = 29.$ Then $z + \frac {1}{y} = \frac {m}{n},$ where $m$ and $n$ are [[relatively prime]] positive integers. Find $m + n$. Show that it is 5. note: this is the type of problem that makes you think symmetry, but actually can be solved easily with substitution, and other normal technniques
+
+## Informal proof
+Step 1: Rewrite the equation $xyz = 1$ as $\frac{1}{z} = xy$.
+Step 2: Substitute the value of $\frac{1}{z}$ into the equation $x + \frac{1}{z} = 5$, resulting in $x + xy = 5$, then $x(1 + y) = 5$, then $\frac{1}{x} = \frac{1 + y}{5}$.
+Step 3: Substitute the value of $\frac{1}{x}$ into the equation $y + \frac{1}{x} = 29$, leading to $y + \frac{1+y}{5} = 29$. Solve for $y$, getting $y = 24$.
+Step 6: Substitute the value of $y$ back into the equations to find $x = \frac{1}{5}$ and $z = \frac{5}{24}$.
+Step 7: Find $z + \frac{1}{y} = \frac{5}{24} + \frac{1}{24} = \frac{1}{4}$.
+Step 8: The rational $p = \frac{1}{4}$ can be expressed as $p = \frac{m}{n}$ where $m = 1$ and $n = 4$. Hence $m + n = 5$.
+
+## Formal statement
+theorem aimeI_2000_p7:
+  fixes x y z :: real
+    and p :: rat
+  assumes "0 < x \<and> 0 < y \<and> 0 < z"
+    and "x * y * z = 1"
+    and "x + 1 / z = 5"
+    and "y + 1 / x = 29"
+    and "z + 1 / y = p"
+    and "0 < p" 
+  shows "let (m,n) = quotient_of p in m + n = 5"
+
+## Proof
+```isabelle
+theory aimeI_2000_p7
+  imports Complex_Main
+begin
+
+(* lemma 1. A lemma can be useful for step 3 which remove any denominator that not equal to zero by multiply the denominator in both size of the equation *)
+lemma cancel_div:
+  fixes x a b c:: real
+  assumes "x > 0" "a + b / x = c"
+  shows "a * x + b = c * x"
+proof -
+  have "x * (a + b / x) = c * x"
+    using assms(2) by auto
+  then have "x * a + x * (b / x) = c * x"
+    by (simp add: distrib_left)
+  then show ?thesis
+    using assms(1) by (simp add: mult.commute)
+qed
+
+(* formal statement copy from the input*)
+theorem aimeI_2000_p7:
+  fixes x y z :: real
+    and p :: rat
+  assumes "0 < x \<and> 0 < y \<and> 0 < z"
+    and "x * y * z = 1"
+    and "x + 1 / z = 5"
+    and "y + 1 / x = 29"
+    and "z + 1 / y = p"
+    and "0 < p" 
+  shows "let (m,n) = quotient_of p in m + n = 5"
+proof -
+  (* Step 1: Rewrite the equation $xyz = 1$ as $\frac{1}{z} = xy$. *)
+  have c0: "z = 1 / (x*y)"
+    using assms(1) assms(2) sledgehammer
+  
+  (* Step 2: Substitute the value of $\frac{1}{z}$ into the equation $x + \frac{1}{z} = 5$, resulting in $x + xy = 5$, then $x(1 + y) = 5$, then $\frac{1}{x} = \frac{1 + y}{5}$. *)
+  have "x + x * y = 5" 
+    using c0 assms(3) sledgehammer
+  then have "x * (1 + y) = 5"
+    sledgehammer
+  (*add*) then have "x = 5 / (1 + y)" using assms(1) 
+    sledgehammer
+  then have c1:"1 / x = (1 + y) / 5"
+    sledgehammer
+
+  (* Step 3: Substitute the value of $\frac{1}{x}$ into the equation $y + \frac{1}{x} = 29$, leading to $y + \frac{1+y}{5} = 29$. Solve for $y$, getting $y = 24$. *)
+  have "y + (1+y)/5 = 29" 
+    using assms(4) c1 sledgehammer
+  then have "5*y + (1 + y) = 145" 
+    using cancel_div[of 5 "y" "1+y" 29] sledgehammer
+  then have c2:"y = 24" sledgehammer
+
+  (* Step 4: Substitute the value of $y$ back into the equations to find $x = \frac{1}{5}$ and $z = \frac{5}{24}$. *)
+  have c3:"x = 1 / 5" 
+    sledgehammer
+  have c4: "z = 5 / 24"
+    sledgehammer
+  
+  (* Step 5: Find $z + \frac{1}{y} = \frac{5}{24} + \frac{1}{24} = \frac{1}{4}$. *)
+  have "p = z + 1/y" 
+    using assms(5) sledgehammer
+  also have "... = 5/24 + 1/24" 
+    unfolding c2 c4 sledgehammer
+  also have "... = 1/4" 
+    sledgehammer
+
+  (* Step 6: The rational $p = \frac{1}{4}$ can be expressed as $p = \frac{m}{n}$ where $m = 1$ and $n = 4$. Hence $m + n = 5$. *)
+  finally have c5: "p = 1/4"
+    sledgehammer
+  have "quotient_of p = (1, 4)" 
+    unfolding c5 sledgehammer
+  then show ?thesis 
+    sledgehammer
+qed
+
+end
+```

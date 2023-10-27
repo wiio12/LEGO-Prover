@@ -1,0 +1,31 @@
+## Problems
+Find the minimum value of $\frac{9x^2\sin^2 x + 4}{x\sin x}$ for $0 < x < \pi$. Show that it is 12.
+
+## Informal proof
+Let $y = x \sin x$. It suffices to show that $12 \leq \frac{9y^2 + 4}{y}. It is trivial to see that $y > 0$. Then one can multiply both sides by $y$ and it suffices to show $12y \leq 9y^2 + 4$. This can be done by the sum of squares method.
+
+## Formal statement
+```isabelle
+theorem
+  fixes x::real
+  assumes "0<x" "x<pi"
+  shows "12 \<le> ((9 * (x^2 * (sin x)^2)) + 4) / (x * sin x)"
+```
+
+## Structured informal proof
+Step 1: Define a new variable y as x * sin(x) to simplify the expression.
+Step 2: Our new goal becomes showing that 12 <= (9 * y^2 + 4) / y
+Step 3: Prove that y is greater than 0, given the constraints on x.
+Step 4: Using Sum of Squares (SoS) techniques, show that 9 * y^2 + 4 >= 12 * y.
+Step 5: Re-express the inequality in terms of x and sin(x) to conclude the proof.
+
+## Request skills
+### Thoughts 1
+The proof requires to use Sum of Squares techniques, thus a skill that demonstrate the use of Sum of Squares techniques will be useful
+
+### Code 1
+```isabelle
+lemma
+   fixes y::real
+   shows "(9 * y^2 + 4) \<ge> 12 * y"
+```

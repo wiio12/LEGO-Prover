@@ -1,0 +1,99 @@
+## Problems
+Given that  $$ \begin{align*}x_{1}&=211,\\ x_{2}&=375,\\ x_{3}&=420,\\ x_{4}&=523,\ \text{and}\\ x_{n}&=x_{n-1}-x_{n-2}+x_{n-3}-x_{n-4}\ \text{when}\ n\geq5, \end{align*} $$  find the value of $x_{531}+x_{753}+x_{975}$. Show that it is 898.
+
+## Informal proof
+Step 1: Prove that x_{n+1} = -x_{n-4} for n ≥ 5. This is derived from combining the recurrence relation for x_n and x_{n-1}.
+Step 2: Prove that x_{5*(2*k) + j} = x_j for k, j ≥ 1 using induction on k.
+Step 2.1: Utilizing the algebraic manipulations to reformat the indices.
+Step 2.2: Using the proved properties to finalize this induction step.
+Step 3: Utilize the proven properties to find the value of x_531, x_753, and x_975.
+Step 4: Sum the values to prove the theorem.
+
+## Formal statement
+```isabelle
+theorem aimeI_2001_p3:
+  fixes x :: "nat \<Rightarrow> int"
+  assumes h0 : "x 1 = 211"
+    and h1 : "x 2 = 375"
+    and h2 : "x 3 = 420"
+    and h3 : "x 4 = 523"
+    and h4 : "\<And>(n::nat). ((n\<ge>5) \<Longrightarrow> (x n = x (n-1) - x (n-2) + x (n-3) - x (n-4)))"
+  shows "x 531 + x 753 + x 975 = 898"
+```
+
+## Proof
+```isabelle
+theory aimeI_2001_p3
+  imports Complex_Main
+begin
+
+(* Here i will copy the formal statement from the input directly*)
+theorem aimeI_2001_p3:
+  fixes x :: "nat \<Rightarrow> int"
+  assumes h0 : "x 1 = 211"
+    and h1 : "x 2 = 375"
+    and h2 : "x 3 = 420"
+    and h3 : "x 4 = 523"
+    and h4 : "\<And>(n::nat). ((n\<ge>5) \<Longrightarrow> (x n = x (n-1) - x (n-2) + x (n-3) - x (n-4)))"
+  shows "x 531 + x 753 + x 975 = 898"
+proof -
+  (* Step 1: Prove that x_{n+1} = -x_{n-4} for n ≥ 5. This is derived from combining the recurrence relation for x_n and x_{n-1}. *)
+  have c0: "\<And>(n::nat). ((n\<ge>5) \<Longrightarrow> (x (n+1) = - x (n-4)))"
+    sledgehammer
+  
+  (* Step 2: Prove that x_{5*(2*k) + j} = x_j for k, j ≥ 1 using induction on k. *)
+  have c1: "(k \<ge> 1) \<Longrightarrow> (j \<ge> 1) \<Longrightarrow> x (5*(2*k) + j) = x j" for k j
+  proof (induct k)
+    case 0
+    then show ?case sledgehammer
+  next
+    case (Suc k)
+    then show ?case
+    proof -
+      (* Step 2.1: Utilizing the algebraic manipulations to reformat the indices. *)
+      have "5 * (2 * (k+1)) + j = 10* (k+1) + j" sledgehammer
+      also have "... = 10*k + j + 9 + 1" sledgehammer
+      finally have c1: "5 * (2 * (k+1)) + j = 10*k + j + 9 + 1" sledgehammer
+
+      (* Step 2.2: Using the proved properties to finalize this induction step. *)
+      then have "x (5 * (2 * (k+1)) + j) = x (10*k + j + 9 + 1)" using c1 sledgehammer
+      also have "... = - x (10*k + j + 9 - 4)" using c0[of "10*k + j + 9"] sledgehammer
+      also have "... = - x (10*k + j + 5)"
+        sledgehammer
+      also have "... = - x (10*k + j + 4 + 1)"
+        sledgehammer
+      also have "... = - (- x(10*k + j + 4 -4))"
+      proof -
+        have "10*k + j + 4 \<ge> 5"
+          using Suc.prems(2) sledgehammer
+        then show ?thesis using c0[of "10*k+j+4"] sledgehammer
+      qed
+      also have "... = - (- x (10*k +j))" sledgehammer
+      also have "... = x (10*k+j)" sledgehammer
+      finally have "x (5 * (2 * (k+1)) + j) = x (10*k+j)" sledgehammer
+      then show ?case
+        sledgehammer
+    qed
+  qed
+  then have c2: "\<And>(k::nat). \<And>(j::nat). (k \<ge> 1) \<Longrightarrow> ((j \<ge> 1) \<Longrightarrow>  x (5*(2*k) + j) = x j)"
+    using c1 sledgehammer
+  
+  (* Step 3: Utilize the proven properties to find the value of x_531, x_753, and x_975. *)
+  have "x 531 = x 1" using c2[of "53" "1"] sledgehammer
+  also have "... = 211" using h0 sledgehammer
+  finally have c3: "x 531 = 211" sledgehammer
+  have "x 753 = x 3" using c2[of "75" "3"] sledgehammer
+  also have "... = 420" using h2 sledgehammer
+  finally have c4: "x 753 = 420" sledgehammer
+  have "x 975 = x 5" using c2[of "97" "5"] sledgehammer
+  also have "... = x (5 - 1) - x (5 - 2) + x (5 - 3) - x (5 - 4)" using h4[of "5"] sledgehammer
+  also have "... = x 4 - x 3 + x 2 - x 1" sledgehammer
+  also have "... = 267" unfolding assms by eval
+  finally have c5: "x 975 = 267" sledgehammer
+
+  (* Step 4: Sum the values to prove the theorem. *)
+  show ?thesis unfolding c3 c4 c5 sledgehammer
+qed
+
+end
+```

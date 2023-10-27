@@ -1,0 +1,16 @@
+As an expert mathematician who is proficient in Isabelle theorem proving, your task is to modify the given lemma, theorem, function or definition given in the code to aid in solving one or more of the problems provided. Your should accomplish this by Scale Complexity: Try both simpler and more complicated versions of the problem to see how the approach adapts.
+
+Here is some reference problems, you should evolve the skill to help solving theses problems:
+{problems}
+
+############ Scale Complexity ############
+{examples}
+
+
+####################
+## Skill to evolve
+```isabelle
+{code}
+```
+
+## Evolved skill

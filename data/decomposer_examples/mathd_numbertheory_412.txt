@@ -1,0 +1,35 @@
+## Problems
+If $x \equiv 4 \pmod{19}$ and $y \equiv 7 \pmod{19}$, then find the remainder when $(x + 1)^2 (y + 5)^3$ is divided by 19. Show that it is 13.
+
+## Informal proof
+If $x \equiv 4 \pmod{19}$ and $y \equiv 7 \pmod{19}$, then \begin{align*} (x + 1)^2 (y + 5)^3 &\equiv 5^2 \cdot 12^3 \\ &\equiv 25 \cdot 1728 \\ &\equiv 6 \cdot 18 \\ &\equiv 108 \\ &\equiv 13 \pmod{19}. \end{align*}
+
+## Formal statement
+```isabelle
+theorem
+  fixes x y :: nat
+  assumes h0 : "x mod 19 = (4:: nat)"
+    and h1 : "y mod 19 = (7:: nat)"
+  shows "(x+1)^2 * (y+5)^3 mod 19 = (13:: nat)"
+```
+
+## Structured informal proof
+Step 1: Compute \((x + 1)^2 \mod 19\) using the lemma 'mod_add_power'. It turns out to be \(5^2 \mod 19\).Step 3: Simplify the terms to 25 and 1728, respectively.
+Step 2: Compute \((y + 5)^3 \mod 19\) using the lemma 'mod_add_power'. It turns out to be \(12^3 \mod 19\).
+Step 3: Use properties of modular multiplication to express \((x + 1)^2 \cdot (y + 5)^3 \mod 19\) in terms of \(c0\) and \(c1\).
+Step 4: Substitute \(c0\) and \(c1\) to find \((x+1)^2 \cdot (y+5)^3 \mod 19\) is \(13\).
+Step 5: Conclude \((x + 1)^2 \cdot (y + 5)^3 \mod 19 = 13\).
+
+## Request skills
+### Thoughts 1
+Prove properties of modular arithmetic involving addition and exponentiation, this lemma will be useful for Step 2 in the main theorem, which involves computations in modulo 19
+
+### Code 1
+```isabelle
+lemma mod_add_power:
+  fixes x n a b c :: nat
+  assumes "n > 0" "b > 0" "c > 0" "x mod n = a"
+  shows "((x + b)^c) mod n = ((a + b)^c) mod n"
+```
+
+

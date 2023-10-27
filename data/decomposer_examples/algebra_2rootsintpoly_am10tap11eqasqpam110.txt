@@ -1,0 +1,25 @@
+## Problems
+Show that for any complex number a, $(a-10)(a+11) = a^2 + a - 110$.
+
+## Informal proof
+We first expand all terms of the left hand side to get $a^2 - 10a + 11a - 10*11$. This equals $a^2 + a - 10*11 = a^2 + a - 110$.
+
+## Formal statement
+theorem
+  fixes a :: complex
+  shows "(a-10) * (a+11) = a^2 + a -110"
+
+## Structured informal proof
+Step 1: Expand the left-hand side of the equation $(a-10)(a+11)$. Simplify the terms to get $a^2 - 10a + 11a - 10 \times 11$.
+Step 2: Combine like terms to achieve $a^2 + a - 110$. Conclude that $(a-10)(a+11) = a^2 + a - 110$.
+
+## Request skills
+### Thoughts 1
+A lemma that shows the distribution properties of complex number will be helpful for step 1, which require this lemma to expands the equations
+
+### Code 1
+```isabelle
+lemma multi_distrib_complex:
+  fixes a b c d :: complex
+  shows "(a + b) * (c + d) = a * c + a * d + b * c + b * d"
+```

@@ -1,0 +1,30 @@
+## Problems
+For how many positive integers $n$ is $n^2 - 3n + 2$ a [[prime]] number?  $\mathrm{(A)}\ \text{none} \qquad\mathrm{(B)}\ \text{one} \qquad\mathrm{(C)}\ \text{two} \qquad\mathrm{(D)}\ \text{more\ than\ two,\ but\ finitely\ many} \qquad\mathrm{(E)}\ \text{infinitely\ many}$ Show that it is \mathrm{(B)}\ \text{one}.
+
+## Informal proof
+Factoring, we get $n^2 - 3n + 2 = (n-2)(n-1)$.  Either $n-1$ or $n-2$ is odd, and the other is even.   Their product must yield an even number.   The only prime that is even is $2$, which is when $n$ is $3$ or $0$.  Since $0$ is not a positive number, the answer is $\mathrm{(B)}\ \text{one}$.
+
+## Formal statement
+```isabelle
+theorem
+  fixes n ::nat
+  assumes "n>0"
+    and prime:"prime (n^2+2-3*n)"
+  shows "n=3"
+```
+
+## Structured informal proof
+Step 1: Prove by contradiction that n must be greater than 2
+Step 1.1: by contradiction, n can only be 1 or 2
+Step 1.2: We use contradiction to show that neither 1 nor 2 satisfy the prime condition
+Step 2: Factor $n^2 - 3n + 2$ into $(n-1)(n-2)$ 
+Step 3: Discuss the primality of $(n-1)(n-2)$
+Step 4: Conclude that $n-1$ or $n-2$ must be 1
+Step 5: Since $n > 2$, it follows that $n = 3
+
+## Request skills
+### Thoughts 1
+No skill required
+
+### Code 1
+N/A

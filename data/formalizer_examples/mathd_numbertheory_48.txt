@@ -1,0 +1,77 @@
+## Problems
+If $321_{b}$ is equal to the base 10 integer 57, find $b$ given that $b>0$. Show that it is 4.
+
+## Informal proof
+Step 1: Use the quadratic roots formula lemma to find the possible values for b in formula $3b^2+2b-56=0$
+Step 2: Calculate the first possible value for b
+Step 3: Calculate the second possible value for b
+Step 4: Because b is greater than zero, conclude that b must be 4
+
+## Formal statement
+```isabelle
+theorem mathd_numbertheory_48:
+  fixes b :: real
+  assumes h0 : "0<b"
+    and h1 : "3 * b^2 + 2 * b + 1 = 57"
+  shows "b=4"
+```
+
+## Proof
+```isabelle
+theory mathd_numbertheory_48
+  imports Complex_Main
+begin
+
+(* lemma 1: a lemma for solving quadratic equations with real coefficients, which is useful for step  *)
+lemma quadratic_roots_formula:
+  fixes a b c x :: real
+  assumes "a ≠ 0"
+  defines "disc ≡ b^2 - 4 * a * c"
+  assumes "disc ≥ 0"
+  shows   "a * x^2 + b * x + c = 0 ⟷ x ∈ {(-b - sqrt disc) / (2*a), (-b + sqrt disc) / (2*a)}"
+proof -
+  have real_sqrt_unique':"(x::real) ^ 2 = y ⟹ x = -sqrt y ∨ x = sqrt y"
+    using real_sqrt_unique[of x y] real_sqrt_unique[of "-x" y]
+    by (cases "x ≥ 0") simp_all
+  from assms have "a * x^2 + b * x + c = 0 ⟷ 4 * a * (a * x^2 + b * x + c) = 0"
+    by simp
+  also have "4 * a * (a * x^2 + b * x + c) = (2 * a * x + b) ^ 2 - b^2 + 4 * a * c"
+    by (simp add: algebra_simps power2_eq_square)
+  also have "… = 0 ⟷ (2 * a * x + b) ^ 2 = disc" by (simp add: disc_def algebra_simps)
+  also from ‹disc ≥ 0› have "… ⟷ (2 * a * x + b) ∈ {-sqrt disc, sqrt disc}"
+    by (auto simp: real_sqrt_unique')
+  also have "… ⟷ x ∈ {(-b - sqrt disc) / (2*a), (-b + sqrt disc) / (2*a)}"
+    using assms by (auto simp: field_simps)
+  finally show ?thesis .
+qed
+
+(* formal statement copy from the input *)
+theorem mathd_numbertheory_48:
+  fixes b :: real
+  assumes h0 : "0<b"
+    and h1 : "3 * b^2 + 2 * b + 1 = 57"
+  shows "b=4"
+proof -
+  (* Step 1: Use the quadratic roots formula lemma to find the possible values for b in formula $3b^2+2b-56=0$ *)
+  have c0:"b=(- 2 - sqrt (2⇧2 - 4 * 3 * - 56)) / (2 * 3) \<or> b=(- 2 + sqrt (2⇧2 - 4 * 3 * - 56)) / (2 * 3) "
+    using quadratic_roots_formula[of 3 2 "-56" b] h1 sledgehammer
+
+  (* Step 2: Calculate the first possible value for b *)
+  have "(- 2 - sqrt (2⇧2 - 4 * 3 * - 56)) / (2 * 3) = (-2 -sqrt(676::int)) / 6"
+    sledgehammer
+  then have c1:"(- 2 - sqrt (2⇧2 - 4 * 3 * - 56)) / (2 * 3) = -14/3"
+    sledgehammer
+
+  (* Step 3: Calculate the second possible value for b *)
+  have "(- 2 + sqrt (2⇧2 - 4 * 3 * - 56)) / (2 * 3) = (-2 + sqrt(676::int)) / 6"
+    sledgehammer
+  then have c2:"(- 2 + sqrt (2⇧2 - 4 * 3 * - 56)) / (2 * 3) = 4"
+    sledgehammer
+
+  (* Step 4: Because b is greater than zero, conclude that b must be 4 *)
+  have "b=-14/3 \<or> b=4" using c0 c1 c2 sledgehammer
+  then show "b=4" using h0 sledgehammer
+qed
+
+end
+```

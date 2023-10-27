@@ -1,0 +1,46 @@
+## Problems
+If $a\geq b > 1,$ what is the largest possible value of $\log_{a}(a/b) + \log_{b}(b/a)?$  $ \mathrm{(A)}\ -2      \qquad \mathrm{(B)}\ 0     \qquad \mathrm{(C)}\ 2      \qquad \mathrm{(D)}\ 3      \qquad \mathrm{(E)}\ 4 $ Show that it is \textbf{B}.
+
+## Informal proof
+Using logarithmic rules, we see that  $\log_{a}a-\log_{a}b+\log_{b}b-\log_{b}a = 2-(\log_{a}b+\log_{b}a)$ $=2-(\log_{a}b+\frac {1}{\log_{a}b})$  Since $a$ and $b$ are both greater than $1$, using [[AM-GM]] gives that the term in parentheses must be at least $2$, so the largest possible values is $2-2=0 \Rightarrow \textbf{B}.$  Note that the maximum occurs when $a=b$.
+
+## Formal statement
+```isabelle
+theorem
+  fixes a b::real
+  assumes "b\<le>a"
+    and "1<b"
+  shows "ln (a/b) / ln a + ln (b/a) / ln b \<le>0" (is "?L \<le> _")
+```
+
+## Structured informal proof
+Step 1: Introduce variables x and y to represent the natural logarithms of a and b respectively.
+Step 2: Given that \(b > 1\), conclude that the natural logarithm of b, \(y\), is greater than 0.
+Step 3: Using the given assumptions, establish that \(x \ge y\). This implies \(x > 0\).
+Step 4: Express the LHS of the main inequality in terms of x and y.
+Step 5: Simplify the expression derived in Step 4.
+Step 6: Demonstrate that the above expression is less than or equal to 0. The Arithmetic Mean-Geometric Mean Inequality (AM-GM) is used here to argue that the term \((y/x + x/y)\) is at least 2, hence the expression is at most 0.
+
+
+## Request skills
+### Thoughts 1
+A base lemma proving am_gm inequality that is useful for step 6
+
+### Code 1
+```isabelle
+lemma am_gm:
+  fixes x y :: real
+  assumes "x >= 0" "y >= 0"
+  shows "x^2 + y^2 >= 2*x*y"
+```
+
+### Thoughts 2
+According to the step 6, we derived a special form of am_gm inequality. which proofs the conjecture $x/y + y/x >= 2$ required in step 6.
+
+### Code 2
+```isabelle
+lemma am_gm_divide_form:
+  fixes x y :: real
+  assumes "x > 0" "y > 0"
+  shows "x/y + y/x >= 2"
+```

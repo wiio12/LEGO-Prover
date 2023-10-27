@@ -1,0 +1,88 @@
+## Skill to evolve
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+theorem mathd_algebra_327:
+  fixes a :: real
+  assumes h0 : "1 / 5 * abs(9 + 2 * a) < 1"
+  shows "-7 < a \<and> a < -2"
+proof -  
+  have "abs(9 + 2 * a) < 5" using assms by simp  
+  then have "9 + 2 * a < 5" and "9 + 2 * a > -5" by auto
+  
+  have "2 * a < 5 - 9" using \<open>9 + 2 * a < 5\<close> by simp
+  then have "2 * a < -4" by simp
+  then have "a < -2" by simp
+  
+  have "2 * a > -5 - 9" using \<open>9 + 2 * a > -5\<close> by simp
+  then have "2 * a > -14" by simp
+  then have "a > -7" by simp
+  then show ?thesis by (metis \<open>a < - 2\<close>)
+qed
+
+end
+```
+
+## Evolved skill
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+theorem absolute_value_inequality:
+  fixes a b :: real
+  assumes h0: "abs(a - b) < c"
+  shows "b - c < a \<and> a < b + c"
+proof -
+  have "a - b < c" and "-(a - b) < c" using assms by auto
+  then have "b - c < a" and "a < b + c" by auto
+  then show ?thesis by auto
+qed
+
+end
+```
+
+
+<split>
+
+
+## Skill to evolve
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+theorem algebra_manipexpr_2erprsqpesqeqnrpnesq:
+  fixes e r :: complex
+  shows "2 * (e * r) + (e^2 + r^2) = (-r + (-e))^2"
+proof -  
+  have "(-r + (-e))^2 = (-r)^2 + 2 * (-r) * (-e) + (-e)^2" by (simp add: power2_eq_square algebra_simps)
+  also have "... = r^2 + 2 * r * e + e^2" by (simp add: power2_eq_square algebra_simps)
+  also have "... = 2 * (e * r) + (e^2 + r^2)" by (simp add: algebra_simps)
+  finally show ?thesis by simp
+qed
+
+end
+```
+
+## Evolved skill
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+lemma square_expression:
+  fixes a b :: complex
+  shows "(-a + -b)^2 = a^2 + 2*a*b + b^2"
+proof -
+  have "(-a + -b)^2 = (-a)^2 + 2 * (-a) * (-b) + (-b)^2"
+    by (simp add: power2_eq_square algebra_simps)
+  also have "... = a^2 + 2 * a * b + b^2"
+    by (simp add: power2_eq_square algebra_simps)
+  finally show ?thesis by simp
+qed
+
+end
+```

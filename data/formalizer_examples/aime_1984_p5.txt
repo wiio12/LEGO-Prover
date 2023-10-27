@@ -1,0 +1,94 @@
+## Problems
+Determine the value of $ab$ if $\log_8a+\log_4b^2=5$ and $\log_8b+\log_4a^2=7$. Show that it is 512.
+
+## Informal proof
+Step 1: Calculate the base 2 logarithms of the original bases in the equations, i.e., $\log_2 8 = 3$, $\log_2 4 = 2$.
+Step 2: Define $c = \log_2 a$ and $d = \log_2 b$ to simplify the equations.
+Step 3: Rewrite the original equations in terms of c and d using the calculated base 2 logarithms. The equations become $\frac{c}{3} + \frac{2d}{2} = 5$ and $\frac{d}{3} + \frac{2c}{2} = 7$.
+Step 4: Solve the linear equations to find that $c = 6$ and $d = 3$.
+Step 5: Use the values of c and d to find $a = 2^6 = 64$ and $b = 2^3 = 8$.
+Step 6: Finally, show that $a * b = 64 * 8 = 512$ to conclude the proof.
+
+## Formal statement
+```isabelle
+theorem aime_1984_p5:
+  fixes a b ::real
+  assumes 
+    "a > 0"
+    "b > 0"
+    "(log 2 a) / (log 2 8) + (log 2 (b^2)) / (log 2 4) = 5"
+    "(log 2 b) / (log 2 8) + (log 2 (a^2)) / (log 2 4) = 7"
+  shows "a * b = 512"
+```
+
+## Proof
+```isabelle
+theory aime_1984_p5
+  imports Complex_Main
+begin
+
+(* lemma 1. It would be helpful for step 1 if there exists lemma that calculate the base 2 logarithms of the original bases in the equations. *)
+lemma log_base_to_power_equals_exponent:
+  fixes a :: real
+  assumes "a > 0" "a \<noteq> 1" "n > 0"
+  shows "log a (a^n) = n"
+proof -
+  have c0: "log a a = 1"
+    by (simp add: assms(1) assms(2))
+  have "log a (a^n) = n * (log a a)"
+    using log_nat_power[of a a n] by (simp add: assms(1))
+  then have c1: "log a (a^n) = n"
+    using c0 by simp
+  then show ?thesis 
+    by (simp add: c1)
+qed
+
+(* lemma 2. In step 5 they uses the log definition to calculate the value of a and b, which require to calculate the antilogarithm_identity which calculate the value of $b = a^c$ given $log_a b = c$ *)
+lemma antilogarithm_identity:
+  assumes "a > 0" and "a \<noteq> 1" and "b > 0" and "log a b = c"
+  shows "b = a ^ c"
+  by (metis assms(1) assms(2) assms(3) assms(4) powr_log_cancel powr_realpow)
+
+(* formal statement copy from the input*)
+theorem aime_1984_p5:
+  fixes a b ::real
+  assumes 
+    "a > 0"
+    "b > 0"
+    "(log 2 a) / (log 2 8) + (log 2 (b^2)) / (log 2 4) = 5"
+    "(log 2 b) / (log 2 8) + (log 2 (a^2)) / (log 2 4) = 7"
+  shows "a * b = 512"
+proof -
+  (* Step 1: Calculate the base 2 logarithms of the original bases in the equations, i.e., $\log_2 8 = 3$, $\log_2 4 = 2$. *)
+  have c1: "log 2 8 = 3"
+    using log_base_to_power_equals_exponent[of 2 3] sledgehammer
+  have c2: "log 2 4 = 2"
+    using log_base_to_power_equals_exponent[of 2 2] sledgehammer
+
+  (* Step 2: Define $c = \log_2 a$ and $d = \log_2 b$ to simplify the equations. *)
+  define c where "c = log 2 a"
+  define d where "d = log 2 b"
+
+  (* Step 3: Rewrite the original equations in terms of c and d using the calculated base 2 logarithms. The equations become $\frac{c}{3} + \frac{2d}{2} = 5$ and $\frac{d}{3} + \frac{2c}{2} = 7$. *)
+  have c3: "c / 3 + 2 * d / 2 = 5"
+    using c_def d_def assms(3) c1 c2 log_nat_power 
+    sledgehammer
+  have c4: "d / 3 + c = 7"
+    using c_def d_def assms(4) c1 c2 log_nat_power
+    sledgehammer
+  
+  (* Step 4: Solve the linear equations to find that $c = 6$ and $d = 3$. *)
+  (* Step 5: Use the values of c and d to find $a = 2^6 = 64$ and $b = 2^3 = 8$. *)
+  have "d = 3" using c3 c4 sledgehammer
+  then have c5:"b = 2^3" using d_def antilogarithm_identity[of 2 b 3]
+    sledgehammer
+  have "c = 6" using c3 c4
+    sledgehammer
+  then have c6:"a = 2^6" using c_def antilogarithm_identity[of 2 a 6]
+    sledgehammer
+  
+  (* Step 6: Finally, show that $a * b = 64 * 8 = 512$ to conclude the proof. *)
+  show ?thesis unfolding c5 c6 sledgehammer
+qed
+
+end

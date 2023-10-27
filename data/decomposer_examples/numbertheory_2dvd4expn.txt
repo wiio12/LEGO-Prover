@@ -1,0 +1,24 @@
+## Problems
+Show that for positive integer n, 2 divides $4^n$.
+
+## Informal proof
+Since n is positive, we can find a natural number m where $m+1=n$. Then we can show that 2 divides $4^{m+1}$. The conclusion thus follows.
+
+## Formal statement
+```isabelle
+theorem
+  fixes n :: nat
+  assumes h0 : "n \<noteq> 0"
+  shows "(2::nat) dvd 4^n"
+```
+
+## Structured informal proof
+Step 1: Since n is positive, we can find a natural number m where $m+1=n$. Then we can show that 2 divides $4^{m+1}$
+
+
+## Request skills
+### Thoughts 1
+No skill required
+
+### Code 1
+N/A

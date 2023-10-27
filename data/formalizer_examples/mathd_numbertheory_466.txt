@@ -1,0 +1,28 @@
+## Problems
+What is the remainder when $1 + 2 + 3 + 4 + \dots + 9 + 10$ is divided by 9? Show that it is 1.
+
+## Informal proof
+Step 1: Calculate the sum $1 + 2 + 3 + 4 + \ldots + 9 + 10 = 55$.
+Step 2: Divide 55 by 9. The remainder is 1.
+
+## Formal statement
+```isabelle
+theorem mathd_numbertheory_466:
+  "(\<Sum> k< 11. k) mod 9 = (1::nat)"
+```
+
+## Proof
+```isabelle
+theory mathd_numbertheory_466
+imports Complex_Main 
+begin
+
+(* no helper function required in this theorem *)
+
+(* formal statement copy from the input *)
+theorem mathd_numbertheory_466:
+  "(\<Sum> k< 11. k) mod 9 = (1::nat)"
+  sledgehammer
+
+end
+```

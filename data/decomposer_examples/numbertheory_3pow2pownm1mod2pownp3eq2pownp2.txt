@@ -1,0 +1,54 @@
+## Problems
+Show that for any positive integer $n$, we have $3^{2^n} - 1 \equiv 2^{n+2} \pmod{2^{n+3}}$.
+
+## Informal proof
+We prove by induction on n. The base case is trivial. Inductive case: when n is 0 it is also trivial. When $n>0$, let $m=2^n$, and we have $3^m - 1 \equiv 4*m \pmod{8*m}$. Then there is $k$ where $3^m - 1 = (8*m)*k + 4*m$. Let $M = 4*m*k^2+m+4*m*k+k$, and we have $3^{2^{m+1}}-1 = 3^{m*2} - 1 = (3^m)^2-1 = ((8*m)*k + 4*m+1)^2 - 1 = (16*m)*M + 8*m$ Hence $3^{2^{m+1}}-1 \equiv 8*m \pmod{16*m}$, which unfolds to $(16*m)*M + 8*m \equiv 8*m \pmod{16*m}$. Therefore the inductive case holds. Q.E.D.
+
+## Formal statement
+```isabelle
+theorem
+  fixes n :: nat
+  assumes "0 < n" 
+  shows "(3^(2^n) - 1) mod (2^(n + 3)) = (2::nat)^(n + 2)"
+```
+
+## Structured informal proof
+Step 1: State the base case and prove it's trivial.
+Step 2: Consider the inductive step, where the hypothesis is assumed to be true for some arbitrary value of $n$.
+Step 3: Define $m = 2^n$ for ease of manipulation.
+Step 4: Utilize the inductive hypothesis to express $3^m - 1$ in terms of $8m$ and some integer $k$.
+Step 5: Expand and simplify $3^{2^{m+1}} - 1$ using the previously defined $m$ and $k$.
+Step 6: Show that the result of this simplification is congruent to $8m$ modulo $16m$, and hence that the original statement is true for $m+1$.
+Step 7: Conclude that by induction, the original statement holds for all positive integers $n$.
+
+## Request skills
+### Thoughts 1
+Familiarity with mathematical induction is key as the proof is inductive in nature. This skill should make it easier to prove the base case and the inductive step.
+
+### Code 1
+```isabelle
+lemma induction_base_case:
+  shows "(3^(2^0) - 1) mod (2^(0 + 3)) = (2::nat)^(0 + 2)"
+```
+
+### Thoughts 2
+A strong understanding of modular arithmetic is crucial, as the proof involves manipulating modular equations.
+
+### Code 2
+```isabelle
+lemma mod_arithmetic:
+  fixes a b c d k :: nat
+  assumes "(a - b) mod d = k"
+  shows "(a^2 - 1) mod (d*2) = 2 * k"
+```
+
+### Thoughts 3
+It will be useful to be proficient in manipulating exponential expressions, as the proof involves simplifying terms like $3^{2^{m+1}}$.
+
+### Code 3
+```isabelle
+lemma exp_simplification:
+  fixes m k :: nat
+  assumes "3^m - 1 = 8 * m * k + 4 * m"
+  shows "3^(2*m) - 1 = 16 * m * (4 * m * k^2 + m + 4 * m * k + k) + 8 * m"
+```

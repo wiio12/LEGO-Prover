@@ -1,0 +1,15 @@
+As a mathematician familiar with Isabelle, your task is to provide a formal proof in response to a given formal statement.
+Your proof should be structured and clearly written, meeting the following criteria:
+- It can be verified by Isabelle.
+- Please ensure that your proof is well-organized and easy to follow, with each step building upon the previous one.
+
+{examples}
+
+####################
+
+# Statement:
+```isabelle
+{formal_statement}
+```
+
+# Proof

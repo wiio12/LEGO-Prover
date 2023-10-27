@@ -1,0 +1,43 @@
+## Problems
+Show that for any complex number a, $(a-10)(a+11) = a^2 + a - 110$.
+
+## Informal proof
+Step 1: Expand the left-hand side of the equation $(a-10)(a+11)$. Simplify the terms to get $a^2 - 10a + 11a - 10 \times 11$.
+Step 2: Combine like terms to achieve $a^2 + a - 110$. Conclude that $(a-10)(a+11) = a^2 + a - 110$.
+
+## Formal statement
+theorem algebra_2rootsintpoly_am10tap11eqasqpam110:
+  fixes a :: complex
+  shows "(a-10) * (a+11) = a^2 + a -110"
+
+## Proof
+```isabelle
+theory algebra_2rootsintpoly_am10tap11eqasqpam110
+  imports Complex_Main "HOL-Library.Sum_of_Squares"
+begin
+
+(* lemma 1. A lemma that shows the distribution properties of complex number will be helpful for step 1, which require this lemma to expands the equations *)
+lemma multi_distrib_complex:
+  fixes a b c d :: complex
+  shows "(a + b) * (c + d) = a * c + a * d + b * c + b * d"
+  by (simp add: distrib_left distrib_right)
+
+(* formal statement copy from the input *)
+theorem algebra_2rootsintpoly_am10tap11eqasqpam110:
+  fixes a :: complex
+  shows "(a-10) * (a+11) = a^2 + a -110"
+proof -
+  
+  (* Step 1: Expand the left-hand side of the equation $(a-10)(a+11)$. Simplify the terms to get $a^2 - 10a + 11a - 10 \times 11$. *)
+  have "(a-10) * (a+11) = a^2 - 10*a + 11*a - 10 *11"
+    using multi_distrib_complex[of a "-10" a 11] sledgehammer
+  (* Step 2: Combine like terms to achieve $a^2 + a - 110$. Conclude that $(a-10)(a+11) = a^2 + a - 110$. *)
+  (* This equals $a^2 + a - 10*11 = a^2 + a - 110$. *)
+  then show ?thesis
+    sledgehammer
+qed
+
+end
+
+
+```

@@ -1,0 +1,50 @@
+## Problems
+The sequence $S_1, S_2, S_3, \cdots, S_{10}$ has the property that every term beginning with the third is the sum of the previous two.  That is, $ S_n = S_{n-2} + S_{n-1} \text{ for } n \ge 3. $ Suppose that $S_9 = 110$ and $S_7 = 42$.  What is $S_4$?  $ \textbf{(A)}\ 4\qquad\textbf{(B)}\ 6\qquad\textbf{(C)}\ 10\qquad\textbf{(D)}\ 12\qquad\textbf{(E)}\ 16\qquad $ Show that it is \textbf{(C) }{10}.
+
+## Informal proof
+Step 1: Use the recursive property to calculate $S_8 = S_9 - S_7 = 110 - 42 = 68$.
+Step 2: Use the recursive property again to find $S_6 = S_8 - S_7 = 68 - 42 = 26$.
+Step 3: Continue this pattern to find $S_5 = S_7 - S_6 = 42 - 26 = 16$.
+Step 4: Finally, calculate $S_4 = S_6 - S_5 = 26 - 16 = 10$ to show that $S_4 = 10$.
+
+## Formal statement
+```isabelle
+theorem amc12a_2013_p7:
+  fixes s :: "nat \<Rightarrow> real"
+  assumes h0 : "\<And>n. s (n+2) = s (n+1) + s n"
+    and h1 : "s 9 = 110"
+    and h2 : "s 7 = 42"
+  shows "s 4 = 10"
+```
+
+## Proof
+```isabelle
+theory amc12a_2013_p7
+  imports Complex_Main
+begin
+
+(* no helper function required in this theorem *)
+
+(* formal statement copy from the input *)
+theorem amc12a_2013_p7:
+  fixes s :: "nat \<Rightarrow> real"
+  assumes h0 : "\<And>n. s (n+2) = s (n+1) + s n"
+    and h1 : "s 9 = 110"
+    and h2 : "s 7 = 42"
+  shows "s 4 = 10"
+proof -
+  (* Step 1: Use the recursive property to calculate $S_8 = S_9 - S_7 = 110 - 42 = 68$. *)
+  have "s 8 = 68" using h1 h2 h0[of 7] sledgehammer
+
+  (* Step 2: Use the recursive property again to find $S_6 = S_8 - S_7 = 68 - 42 = 26$. *)
+  hence h3: "s 6 = 26" using h2 h0[of 6] sledgehammer
+
+  (* Step 3: Continue this pattern to find $S_5 = S_7 - S_6 = 42 - 26 = 16$. *)
+  hence "s 5 = 16" using h2 h0[of 5] sledgehammer
+
+  (* Step 4: Finally, calculate $S_4 = S_6 - S_5 = 26 - 16 = 10$ to show that $S_4 = 10$. *)
+  then show ?thesis using h3 h0[of 4] sledgehammer
+qed
+
+end
+```

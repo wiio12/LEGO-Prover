@@ -1,0 +1,55 @@
+## Problems
+Show that for any four complex numbers a, b, c, and d, $(a-d)(a-c)(a-b) = -(((a^2 - a(b+c)) + bc) * d) + (a^2 - a(b+c) + bc) * a$.
+
+## Informal proof
+Step 1: Recognize that $a^2 = a * a$, which is a trivial identity.
+Step 2: Expand the left-hand side of the equation $(a-d)(a-c)(a-b)$ using distributive laws.
+Step 3: Expand the right-hand side of the equation $-(((a^2 - a(b+c)) + bc) * d) + (a^2 - a(b+c) + bc) * a$ using distributive laws.
+Step 4: Compare the expanded left-hand side and right-hand side to show that they are equivalent. Conclude that the main equation holds true.
+
+## Formal statement
+theorem algebra_3rootspoly_amdtamctambeqnasqmbpctapcbtdpasqmbpctapcbta:
+  fixes a b c d :: complex
+  shows "(a-d) * (a-c) * (a-b) = -(((a^2 - (b+c) * a) + c * b) * d) + (a^2 - (b+c) * a + c * b) * a"
+
+## Proof
+```isabelle
+theory algebra_3rootspoly_amdtamctambeqnasqmbpctapcbtdpasqmbpctapcbta
+  imports Complex_Main
+begin
+
+(* no helper function required in this theorem *)
+
+(* formal statement copy from the input *)
+theorem algebra_3rootspoly_amdtamctambeqnasqmbpctapcbtdpasqmbpctapcbta:
+  fixes a b c d :: complex
+  shows "(a-d) * (a-c) * (a-b) = -(((a^2 - (b+c) * a) + c * b) * d) + (a^2 - (b+c) * a + c * b) * a"
+proof -
+  (* Step 1: Recognize that $a^2 = a * a$, which is a trivial identity. *)
+  have trivial_identity: "a^2 = a * a" sledgehammer
+  
+  (* Step 2: Expand the left-hand side of the equation $(a-d)(a-c)(a-b)$ using distributive laws. *)
+  have lhs: "(a-d) * (a-c) * (a-b) = (a*a - a*b - a*c + b*c) * (a - d)"
+    sledgehammer
+  also have "... = a*a*a - a*a*d - a*b*a + a*b*d - a*c*a + a*c*d + b*c*a - b*c*d"
+    sledgehammer
+  also have "... = a^3 - a^2*d - a*b*a + a*b*d - a*c*a + a*c*d + b*c*a - b*c*d"
+    sledgehammer
+  finally have lhs_eq: "(a-d) * (a-c) * (a-b) =  a^3 - a^2*d - a*b*a + a*b*d - a*c*a + a*c*d + b*c*a - b*c*d"
+    sledgehammer
+  
+  (* Step 3: Expand the right-hand side of the equation $-(((a^2 - a(b+c)) + bc) * d) + (a^2 - a(b+c) + bc) * a$ using distributive laws. *)
+  have rhs: "-(((a^2 - (b+c) * a) + c * b) * d) + (a^2 - (b+c) * a + c * b) * a = - (a^2*d - b*d*a - c*d*a + c*b*d) + (a^3 - b*a*a - c*a*a + c*b*a)"
+    sledgehammer
+  also have "... = a^3 - a^2*d - b*a*a + b*a*d - c*a*a + c*a*d + b*c*a - b*c*d"
+    sledgehammer
+  finally have rhs_eq: "-(((a^2 - (b+c) * a) + c * b) * d) + (a^2 - (b+c) * a + c * b) * a = a^3 - a^2*d - b*a*a + b*a*d - c*a*a + c*a*d + b*c*a - b*c*d"
+    sledgehammer
+  
+  (* Step 4: Compare the expanded left-hand side and right-hand side to show that they are equivalent. Conclude that the main equation holds true. *)
+  show ?thesis using lhs_eq rhs_eq
+    sledgehammer
+qed
+
+end
+```

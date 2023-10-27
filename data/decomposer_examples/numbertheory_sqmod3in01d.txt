@@ -1,0 +1,54 @@
+## Problems
+Show that for any integer, the residue of its square divided by 3 is either 0 or 1.
+
+## Informal proof
+Let $a$ stand for this arbitrary integer. Let $b = a mod 3$. We know that b can only be 0, 1, or 2. Also, $a^2 mod 3 = b^2 mod 3$. If $b=0$, $a^2 mod 3 = 0^2 mod 3 = 0$; If $b=1$, $a^2 mod 3 = 1^2 mod 3 = 1$; If $b=2$, $a^2 mod 3 = 2^2 mod 3 = 1$.
+
+## Formal statement
+```isabelle
+theorem
+  fixes a :: int
+  shows "a^2 mod 3 = 0 \<or> a^2 mod 3 = 1"
+```
+
+## Structured informal proof
+Step 1: Introduce a new variable $b$ such that $b = a \mod 3$. This simplifies the expression since $b$ can only be 0, 1, or 2.
+Step 2: State that $a^2 \mod 3 = b^2 \mod 3$, which can be proved using the properties of modulo arithmetic.
+Step 3: Enumerate the cases for $b$, i.e., $b = 0$, $b = 1$, or $b = 2$.
+Step 4: For each case, calculate $b^2 \mod 3$. Show that each case results in either $0$ or $1$.
+Step 5: Conclude that for any integer $a$, $a^2 \mod 3$ must be either $0$ or $1$.
+
+## Request skills
+### Thoughts 1
+Having an understanding of modular arithmetic is important since the proof involves the modulo operation.
+  
+### Code 1
+```isabelle
+lemma modulo_squared_equivalence:
+  fixes a b :: int
+  assumes "b = a mod 3"
+  shows "a^2 mod 3 = b^2 mod 3"
+```
+
+### Thoughts 2
+The proof requires enumerating cases based on the possible residues of $b$ modulo 3, which are 0, 1, or 2. The ability to perform case analysis is crucial here.
+
+### Code 2
+```isabelle
+lemma case_analysis_modulo_3:
+  fixes b :: int
+  assumes "b = a mod 3"
+  shows "b = 0 \<or> b = 1 \<or> b = 2"
+```
+
+### Thoughts 3
+Since each case results in either $0$ or $1$, familiarity with basic arithmetic and modular operations is required.
+
+### Code 3
+```isabelle
+lemma square_modulo_3_cases:
+  fixes b :: int
+  shows "b^2 mod 3 = 0 \<or> b^2 mod 3 = 1"
+```
+
+By addressing these elements, the proof can be made rigorous and comprehensive.

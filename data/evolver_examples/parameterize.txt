@@ -1,0 +1,316 @@
+## Skill to evolve
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+theorem solve_for_b:
+  fixes a b :: real
+  assumes h0 : "3*a+2*b=12"
+  shows "b=(12-3*a)/2"
+proof -
+  have "2*b = 12-3*a"
+    using h0 by simp
+  then have "b = (12-3*a)/2"
+    by simp
+  then show ?thesis by simp
+qed
+
+end
+```
+
+## Evolved skill
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+lemma linear_combination_solve_for_b:
+  fixes a b :: real
+  assumes h0 : "m*a + n*b = p"
+    and h1 : "n \<noteq> 0"
+  shows "b = (p - m*a)/n"
+proof -
+  have "n*b = p - m*a"
+    using h0 by simp
+  then have "b = (p - m*a)/n"
+    by (metis h1 mult.commute nonzero_mult_div_cancel_right)
+  then show ?thesis by simp
+qed
+
+end
+```
+
+
+<split>
+
+
+## Skill to evolve
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+lemma last_two_digits_5_pow:
+  fixes n :: nat
+  assumes "n \<ge> 1"
+  shows "(5^n) mod 100 = 25"
+proof (cases "n = 1")
+  case True
+    then show ?thesis by simp
+next
+  case False
+    then have "n \<ge> 2"
+      using assms by simp
+    show ?thesis
+    proof (induction n)
+      case 0
+        then show ?case by simp
+      next
+      case (Suc n)
+        assume IH: "(5^n) mod 100 = 25"
+        have "(5^(Suc n)) mod 100 = (5 * (5^n)) mod 100" by simp
+        also have "... = (5 * 25) mod 100" using IH by simp
+        also have "... = 125 mod 100" by simp
+        also have "... = 25" by simp
+        finally show ?case by simp
+    qed
+qed
+
+theorem mathd_numbertheory_198:
+  "(5^2005) mod 100 = (25::nat)"
+proof -
+  have "(5^2005) mod 100 = (5^2000 * 5^5) mod 100" by simp
+  also have "... = ((5^2000) mod 100 * (5^5) mod 100) mod 100" 
+    by (simp add: mod_mult_eq)
+  also have "... = (25 * (5^5) mod 100) mod 100"
+    using last_two_digits_5_pow[of 2000] by simp
+  also have "... = (25 * 3125) mod 100"
+    by (simp add: power_mod)
+  also have "... = 78125 mod 100" by simp
+  also have "... = 25" by simp
+  finally show ?thesis by simp
+qed
+
+end
+```
+
+## Evolved skill
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+lemma modulo_of_power_congruent_to_power_of_modulo:
+  fixes a n m :: nat
+  assumes "a > 0" "n > 0" "m > 0"
+  shows "(a^n) mod m = (a mod m)^n mod m"
+proof (cases "n = 1")
+  case True
+  then show ?thesis
+    by simp
+next
+  case False
+  then have "n \<ge> 2"
+    using assms
+    by simp
+  show ?thesis
+  proof (induction n)
+    case 0
+    then show ?case
+      by simp
+  next
+    case (Suc n)
+    assume IH: "(a^n) mod m = (a mod m)^n mod m"
+    have "(a^(Suc n)) mod m = (a * (a^n)) mod m"
+      by simp
+    also have "... = (a * (a mod m)^n mod m) mod m"
+      using IH
+      by (metis calculation mod_mod_trivial mod_mult_cong)
+    also have "... = ((a mod m) * (a mod m)^n mod m) mod m"
+      by (metis mod_mod_trivial mod_mult_left_eq)
+    also have "... = ((a mod m)^(Suc n)) mod m"
+      by simp
+    finally show ?case
+      by simp
+  qed
+qed
+
+end
+```
+
+
+
+
+<split>
+
+
+## Skill to evolve
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+lemma power_of_2_times_3_generalized:
+  fixes n::nat
+  shows "2^n * 3^n = (6^n::nat)"
+by (smt (verit) One_nat_def Suc_1 distrib_left_numeral distrib_right_numeral mult_2 mult_2_right nat_1_add_1 numeral_3_eq_3 numeral_Bit0 plus_1_eq_Suc power_0 power_Suc0_right power_add power_mult_distrib)
+
+end
+```
+
+## Evolved skill
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+lemma power_of_a_times_b_generalized:
+  fixes a b n::nat
+  assumes "a > 0" "b > 0"
+  shows "a^n * b^n = (a*b)^n"
+by (simp add: assms power_mult_distrib)
+
+end
+```
+
+
+
+
+
+<split>
+
+
+## Skill to evolve
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+lemma divisibility_criteria_4:
+  fixes n :: nat
+  shows "n mod 4 = 0 \<longleftrightarrow> 4 dvd n"
+using dvd_eq_mod_eq_0 by blast
+
+end
+```
+
+## Evolved skill
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+lemma mod_divisibility:
+  fixes a b :: nat
+  assumes "a mod b = 0"
+  shows "b dvd a"
+proof -
+  have "b dvd a \<longleftrightarrow> a mod b = 0" by auto
+  then show ?thesis using assms by simp
+qed
+
+end
+```
+
+
+
+
+<split>
+
+
+## Skill to evolve
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+theorem mathd_numbertheory_136:
+  fixes n ::nat
+  assumes "123 * n + 17 = 39500"
+  shows "n = 321"
+proof -
+  have "123 * n + 17 = 39500" using assms by simp
+  then have "123 * n = 39483" by auto
+  then have "n = 39483 div 123" by simp
+  then show "n = 321" by simp
+qed
+
+end
+```
+
+## Evolved skill
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+lemma solve_linear_equation:
+  fixes n::nat
+  assumes "a > 0"
+  assumes "a*n + b = c"
+  shows "n = (c-b) div a"
+proof -
+  have "a*n + b = c" using assms by simp
+  then have "a*n = c-b" by simp
+  then have "n = (c-b) div a" using `a > 0`
+    by (smt (verit) div_mult_self1_is_m)
+  then show ?thesis by simp
+qed
+
+end
+```
+
+
+<split>
+
+
+## Skill to evolve
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+theorem mathd_algebra_510:
+  fixes x y :: real
+  assumes h0 : "x+y=13"
+    and h1 : "x*y=24"
+  shows "sqrt (x^2 + y^2) = 11"
+proof -
+  have "sqrt (x^2 + y^2) = sqrt ((x + y)^2 - 2*x*y)"
+    by (smt (verit) power2_sum real_sqrt_eq_iff)
+  also have "... = sqrt (13^2 - 2*24)" using h0 h1
+    by (metis ab_semigroup_mult_class.mult_ac(1) mult.commute mult.left_commute mult_2_right power2_eq_square)
+  also have "... = sqrt (169 - 48)" by simp
+  also have "... = sqrt 121" by simp
+  also have "... = 11" by simp
+  finally show ?thesis by simp
+qed
+
+end
+```
+
+## Evolved skill
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+theorem sum_and_product_to_sum_of_squares:
+  fixes x y :: real
+  assumes h0 : "x+y=a"
+    and h1 : "x*y=b"
+    and h2 : "a > 0"
+    and h3 : "b > 0"
+  shows "sqrt (x^2 + y^2) = sqrt (a^2 - 2*b)"
+proof -
+  have "sqrt (x^2 + y^2) = sqrt ((x + y)^2 - 2*x*y)" by (smt (verit) power2_sum real_sqrt_eq_iff)
+  also have "... = sqrt (a^2 - 2*b)" using h0 h1
+    by (metis ab_semigroup_mult_class.mult_ac(1) mult.commute mult.left_commute mult_2_right power2_eq_square)
+  finally show ?thesis by simp
+qed
+
+end
+```
+
+

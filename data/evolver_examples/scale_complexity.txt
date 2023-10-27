@@ -1,0 +1,229 @@
+## Skill to evolve
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+lemma equation_with_division_resolved:
+  fixes x y a b c :: "'a::field"
+  assumes "x \<noteq> 0" "y \<noteq> 0" "a + b / x = c / y"
+  shows "a * (x * y) + b * y = c * x"
+proof -
+  have "(x * y) * (a + b / x) = c * x" using assms(3)
+    by (metis assms(2) diff_minus_eq_add divide_cancel_left mult.assoc mult.commute nonzero_divide_eq_eq verit_minus_simplify(3))
+  then have "(x * y) * a + (x * y) * (b / x) = c * x" by (simp add: distrib_left)
+  hence "x * (y * a) + (b * y) = c * x" using assms(1) by (auto simp: field_simps)
+  thus ?thesis using assms(2) by (auto simp: field_simps)
+qed
+
+end
+```
+
+
+## Evolved skill
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+lemma field_add_divide_cancel:
+  fixes x a b c :: "'a::field"
+  assumes "x ≠ 0" "a + b / x = c"
+  shows "a * x + b = c * x"
+proof -
+  have "x * (a + b / x) = c * x" using assms(2) by auto
+  then have "x * a + x * (b / x) = c * x" by (simp add: distrib_left)
+  thus ?thesis using assms(1) by (simp add: mult.commute)
+qed
+
+end
+```
+
+
+<split>
+
+
+
+## Skill to evolve
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+lemma linear_function_difference_formula:
+  fixes m b x y :: real
+  assumes "\<forall>x. f x = m * x + b"
+  shows "f x - f y = m * (x - y)"
+proof -
+  have "f x - f y = m * x + b - (m * y + b)" using assms by simp
+  moreover have "... = m * (x - y)" by sos
+  ultimately show ?thesis .
+qed
+
+end
+```
+
+## Evolved skill
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+lemma linear_func_diff_properties:
+  fixes m n b x1 x2 y1 y2 :: real
+  assumes "\<forall> x y. f x y = m * x + n * y + b"
+  shows "f x1 y1 - f x2 y2 = m * (x1 - x2) + n * (y1 - y2)"
+proof -
+  have "f x1 y1 - f x2 y2 = (m * x1 + n * y1 + b) - (m * x2 + n * y2 + b)"
+    using assms by simp
+  also have "... = m * x1 + n * y1 - (m * x2 + n * y2)" by simp
+  also have "... = m * x1 - m * x2 + n * y1 - n * y2" by simp
+  also have "... = m * (x1 - x2) + n * (y1 - y2)" by (auto simp: field_simps)
+  finally show ?thesis .
+qed
+
+end
+```
+
+
+
+
+<split>
+
+
+
+## Skill to evolve
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+lemma log_base_floor:
+  fixes a b :: real
+  assumes "a > 0" "b > 1"
+  shows "b^x \<le> a \<and> a < b^(x+1) \<longleftrightarrow> floor(log b a) = x"
+proof -
+  have "b^x \<le> a \<and> a < b^(x+1) \<longleftrightarrow> log b (b^x) \<le> log b a \<and> log b a < log b (b^(x+1))"
+    using assms by (smt (verit) Nat.add_0_right dense dual_order.strict_trans dual_order.strict_trans1 le_cases3 less_numeral_extra(1) log_le_cancel_iff log_less_cancel_iff nat_int_comparison(2) nat_less_real_le of_nat_0 of_nat_1 of_nat_add one_le_power order.strict_iff_not self_le_power trans_less_add2)
+  also have "... \<longleftrightarrow> x \<le> log b a \<and> log b a < x+1"
+    by (smt (verit) assms(2) dense dual_order.trans le_log_of_power log_pow_cancel order.strict_iff_order order.strict_trans2 order_trans)
+  also have "... \<longleftrightarrow> floor(log b a) = x" by linarith
+  finally show ?thesis by simp
+qed
+
+end
+```
+
+## Evolved skill
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+lemma log_base_power_floor:
+  fixes a b :: nat
+  assumes "a > 0" "b > 1" "n > 0"
+  shows "(b^n)^x \<le> a \<and> a < (b^n)^(x+1) \<longleftrightarrow> \<lfloor>log b a / log b (b^n)\<rfloor> = x"
+proof -
+  have "(b^n)^x \<le> a \<and> a < (b^n)^(x+1) \<longleftrightarrow> log b ((b^n)^x) \<le> log b a \<and> log b a < log b ((b^n)^(x+1))"
+    using assms by (smt (verit) less_imp_of_nat_less log_le_cancel_iff log_less_cancel_iff of_nat_0_less_iff of_nat_1 of_nat_le_iff of_nat_less_imp_less of_nat_mono order.strict_trans1 zero_less_one_class.zero_le_one zero_less_power)
+  also have "... \<longleftrightarrow> x * log b (b^n) \<le> log b a \<and> log b a < (x+1) * log b (b^n)"
+    by (smt (verit) add.comm_neutral assms(2) less_or_eq_imp_le log_nat_power nat_less_real_le of_nat_0_less_iff of_nat_1 of_nat_add of_nat_mono of_nat_power_eq_of_nat_cancel_iff one_le_power)
+  also have "... \<longleftrightarrow> x \<le> log b a / log b (b^n) \<and> log b a / log b (b^n) < x+1"
+    using assms by (simp add: field_simps)
+  also have "... \<longleftrightarrow> \<lfloor>log b a / log b (b^n)\<rfloor> = x"
+    by linarith
+  finally show ?thesis by simp
+qed
+
+end
+```
+
+
+
+<split>
+
+
+
+## Skill to evolve
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+theorem complex_add_simplified:
+  fixes z1 z2 :: complex
+  shows "Re (z1 + z2) = Re z1 + Re z2" 
+    and "Im (z1 + z2) = Im z1 + Im z2"
+proof -
+  have "Re (z1 + z2) = Re z1 + Re z2" and "Im (z1 + z2) = Im z1 + Im z2"
+    by (simp_all add: complex_add)
+  thus "Re (z1 + z2) = Re z1 + Re z2" and "Im (z1 + z2) = Im z1 + Im z2"
+    by auto
+qed
+
+end
+```
+
+## Evolved skill
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+theorem finite_complex_set_sum_real_imaginary_parts:
+  fixes zs :: "complex set"
+  assumes "finite zs"
+  shows "Re (sum (\<lambda>z. z) zs) = sum (\<lambda>z. Re z) zs" 
+    and "Im (sum (\<lambda>z. z) zs) = sum (\<lambda>z. Im z) zs"
+proof -
+  have "Re (sum (\<lambda>z. z) zs) = sum (\<lambda>z. Re z) zs" and "Im (sum (\<lambda>z. z) zs) = sum (\<lambda>z. Im z) zs"
+    using assms by (induction rule: finite_induct, simp_all add: complex_add)
+  thus "Re (sum (\<lambda>z. z) zs) = sum (\<lambda>z. Re z) zs" and "Im (sum (\<lambda>z. z) zs) = sum (\<lambda>z. Im z) zs"
+    by auto
+qed
+
+end
+```
+
+
+
+
+<split>
+
+
+
+## Skill to evolve
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+lemma power_sqrt_eq:
+  fixes a :: real
+  assumes "a \<ge> 0"
+  shows "a = sqrt (a ^ 2)"
+using assms by simp
+
+end
+```
+
+## Evolved skill
+```isabelle
+theory Scratch
+  imports Complex_Main
+begin
+
+lemma sqrt_of_diff_of_squares_for_nonneg_real_numbers:
+  fixes a b c :: real
+  assumes "a \<ge> 0" "b \<ge> 0" "c \<ge> 0"
+  shows "\<lbrakk> a^2 + b^2 = c^2; a \<le> b \<rbrakk> \<Longrightarrow> a = sqrt (c^2 - b^2)"
+proof -
+  assume "a^2 + b^2 = c^2" "a \<le> b" 
+  hence "c^2 - b^2 = a^2" by simp
+  hence "sqrt (c^2 - b^2) = sqrt (a^2)" by simp
+  thus "a = sqrt (c^2 - b^2)" using assms by simp
+qed
+
+end
+```

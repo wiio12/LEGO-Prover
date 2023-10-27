@@ -1,0 +1,66 @@
+## Problems
+For how many positive integers $n$ is $n^2 - 3n + 2$ a [[prime]] number?  $\mathrm{(A)}\ \text{none} \qquad\mathrm{(B)}\ \text{one} \qquad\mathrm{(C)}\ \text{two} \qquad\mathrm{(D)}\ \text{more\ than\ two,\ but\ finitely\ many} \qquad\mathrm{(E)}\ \text{infinitely\ many}$ Show that it is \mathrm{(B)}\ \text{one}.
+
+## Informal proof
+Step 1: Prove by contradiction that n must be greater than 2
+Step 1.1: by contradiction, n can only be 1 or 2
+Step 1.2: We use contradiction to show that neither 1 nor 2 satisfy the prime condition
+Step 2: Factor $n^2 - 3n + 2$ into $(n-1)(n-2)$ 
+Step 3: Discuss the primality of $(n-1)(n-2)$
+Step 4: Conclude that $n-1$ or $n-2$ must be 1
+Step 5: Since $n > 2$, it follows that $n = 3
+
+## Formal statement
+```isabelle
+theorem amc12b_2002_p3:
+  fixes n ::nat
+  assumes "n>0"
+    and prime:"prime (n^2+2-3*n)"
+  shows "n=3"
+```
+
+## Proof
+```isabelle
+theory
+  imports Complex_Main
+begin
+
+(* no helper function required in this theorem *)
+
+(* formal statement copy from the input *)
+theorem amc12b_2002_p3:
+  fixes n ::nat
+  assumes "n>0"
+    and prime:"prime (n^2+2-3*n)"
+  shows "n=3"
+proof -
+  (* Step 1: Prove by contradiction that n must be greater than 2 *)
+  have c0:"n>2" 
+  proof (rule ccontr)
+    assume "\<not> 2 < n"
+    (* Step 1.1: by contradiction, n can only be 1 or 2 *)
+    then have "n=1 \<or> n=2" using \<open>n>0\<close> sledgehammer
+    (* Step 1.2: We use contradiction to show that neither 1 nor 2 satisfy the prime condition *)
+    then show False using prime[THEN prime_gt_1_nat]
+      sledgehammer
+  qed
+  
+  (* Step 2: Factor $n^2 - 3n + 2$ into $(n-1)(n-2)$ *)
+  then have "n^2+2-3*n  = (n-1) * (n-2)"
+    unfolding power2_eq_square
+    sledgehammer
+
+  (* Step 3: Discuss the primality of $(n-1)(n-2)$ *)
+  then have "prime ((n-1) * (n-2))"
+    using prime sledgehammer
+  
+  (* Step 4: Conclude that $n-1$ or $n-2$ must be 1 *)
+  then have "n-1=1 \<or> n-2 = 1"
+    using prime_product sledgehammer
+  
+  (* Step 5: Since $n > 2$, it follows that $n = 3$ *)
+  with c0 show "n=3" sledgehammer
+qed
+
+end
+```

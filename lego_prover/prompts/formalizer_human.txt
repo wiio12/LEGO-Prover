@@ -1,0 +1,19 @@
+Here some useful skill for reference:
+{skill_examples}
+
+{examples}
+
+####################
+
+## Problems
+{informal_statement}
+
+## Informal proof
+{informal_proof}
+
+## Formal statement
+```isabelle
+{formal_statement}
+```
+
+## Proof

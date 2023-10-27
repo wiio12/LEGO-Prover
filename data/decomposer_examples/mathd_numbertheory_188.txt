@@ -1,0 +1,23 @@
+## Problems
+Find the greatest common factor of 180 and 168. Show that it is 12.
+
+## Informal proof
+This is true by simple evaluation.
+
+## Formal statement
+```isabelle
+theorem
+  fixes n :: nat
+  assumes "0 < n" 
+  shows "(3^(2^n) - 1) mod (2^(n + 3)) = (2::nat)^(n + 2)"
+```
+
+## Structured informal proof
+Step 1: This is true by simple evaluation.
+
+## Request skills
+### Thoughts 1
+No skill required
+
+### Code 1
+N/A

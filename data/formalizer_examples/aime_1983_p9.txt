@@ -1,0 +1,52 @@
+## Problems
+Find the minimum value of $\frac{9x^2\sin^2 x + 4}{x\sin x}$ for $0 < x < \pi$. Show that it is 12.
+
+## Informal proof
+Step 1: Define a new variable y as x * sin(x) to simplify the expression.
+Step 2: Our new goal becomes showing that 12 <= (9 * y^2 + 4) / y
+Step 3: Prove that y is greater than 0, given the constraints on x.
+Step 4: Using Sum of Squares (SoS) techniques, show that 9 * y^2 + 4 >= 12 * y.
+Step 5: Re-express the inequality in terms of x and sin(x) to conclude the proof.
+
+## Formal statement
+```isabelle
+theorem aime_1983_p9:
+  fixes x::real
+  assumes "0<x" "x<pi"
+  shows "12 \<le> ((9 * (x^2 * (sin x)^2)) + 4) / (x * sin x)"
+```
+
+## Proof
+```isabelle
+theory aime_1983_p9
+  imports Complex_Main "HOL-Library.Sum_of_Squares"
+begin
+
+(* no helper lemma are required *)
+
+(* formal statement copy from the input*)
+theorem aime_1983_p9:
+  fixes x::real
+  assumes "0<x" "x<pi"
+  shows "12 \<le> ((9 * (x^2 * (sin x)^2)) + 4) / (x * sin x)"
+proof -
+  (* Step 1: Define a new variable y as x * sin(x) to simplify the expression. *)
+  define y where "y=x * sin x"
+  (* Step 2: Our new goal becomes showing that 12 <= (9 * y^2 + 4) / y *)
+  have "12 \<le> (9 * y^2 + 4) / y"
+  proof -
+    (* Step 3: Prove that y is greater than 0, given the constraints on x. *)
+    have c0: "y > 0"
+      by (simp add: assms(1) assms(2) sin_gt_zero y_def)
+    (* Step 4: Using Sum of Squares (SoS) techniques, show that 9 * y^2 + 4 >= 12 * y. *)
+    have "(9 * y^2 + 4) \<ge> 12 * y" 
+      by sos
+    then show ?thesis
+      using c0 by (simp add: mult_imp_le_div_pos)
+  qed
+  (* Step 5: Re-express the inequality in terms of x and sin(x) to conclude the proof. *)
+  then show ?thesis
+    by (simp add: power_mult_distrib y_def)
+qed
+
+end

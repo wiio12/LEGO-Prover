@@ -1,0 +1,35 @@
+## Problems
+What positive two-digit integer is exactly twice the sum of its digits? Show that it is 18.
+
+## Informal proof
+We simplify $10a + b = 2(a+b)$ to get $8a = b$. Since $a$ is at least 1, $b$ is at least 8. We know $b$ is 8 since $8a = b$ and $a$ is a natural number. Hence $a$ is 1. The two-digit integer is hence $18$.
+
+## Formal statement
+```isabelle
+theorem
+  fixes a b :: nat
+  assumes h0 : "1\<le>a \<and> a \<le>9 \<and> b \<le>9"
+    and h1 : "10 * a + b = 2 * (a+b)"
+  shows "10 * a + b = 18"
+```
+
+## Structured informal proof
+Step 1. Simplify $10a + b = 2(a+b)$ to get $8a = b$.
+Step 2: Apply the constraint that $a$ is at least 1 to get that $b$ is at least 8.
+Step 3: Use the natural number condition for $a$ and $b$ to argue that $b = 8$ and $a = 1$ are the only viable solutions that satisfy the equation and constraints.
+Step 4: Conclude that the two-digit integer is $18$ as $10 * 1 + 8 = 18$.
+
+## Request skills
+### Thoughts 1
+The solver needs to be comfortable working with Diophantine equations and natural numbers to find integer solutions for the given equation.
+
+### Code 1
+```isabelle
+lemma find_a_b_integer_solution:
+  fixes a b :: nat
+  assumes 
+    "1 \<le> a \<and> a \<le> 9 \<and> b \<le> 9"
+    "10 * a + b = 2 * (a + b)"
+  shows "a = 1 \<and> b = 8"
+```
+

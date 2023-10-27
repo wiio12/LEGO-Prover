@@ -1,0 +1,1 @@
+This skill calculates the logarithm of a number raised to a power. It is a general mathematical property and can be used in any context where logarithms are involved. The skill takes three arguments: a real number 'a' which is greater than 0 and not equal to 1, and a positive integer 'n'. It returns the logarithm base 'a' of 'a' raised to the power 'n', which is equal to 'n'.

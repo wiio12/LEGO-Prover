@@ -1,0 +1,61 @@
+## Problems
+Suppose that $x,$ $y,$ and $z$ are three positive numbers that satisfy the equations $xyz = 1,$ $x + \frac {1}{z} = 5,$ and $y + \frac {1}{x} = 29.$ Then $z + \frac {1}{y} = \frac {m}{n},$ where $m$ and $n$ are [[relatively prime]] positive integers. Find $m + n$. Show that it is 5. note: this is the type of problem that makes you think symmetry, but actually can be solved easily with substitution, and other normal technniques
+
+## Informal proof
+We can rewrite $xyz=1$ as $\frac{1}{z}=xy$. Substituting into one of the given equations, we have $x+xy=5$ $x(1+y)=5$ $\frac{1}{x}=\frac{1+y}{5}.$ we can substitute back into $y+\frac{1}{x}=29$ to obtain $y+\frac{1+y}{5}=29$ $5y+1+y=145$ $y=24.$ We can then substitute once again to get $x=\frac15$ $z=\frac{5}{24}.$ Thus, $z+\frac1y=\frac{5}{24}+\frac{1}{24}=\frac{1}{4}$, so $m+n=005$.
+
+## Formal statement
+theorem
+  fixes x y z :: real
+    and p :: rat
+  assumes "0 < x \<and> 0 < y \<and> 0 < z"
+    and "x * y * z = 1"
+    and "x + 1 / z = 5"
+    and "y + 1 / x = 29"
+    and "z + 1 / y = p"
+    and "0 < p" 
+  shows "let (m,n) = quotient_of p in m + n = 5"
+
+## Structured informal proof
+Step 1: Rewrite the equation $xyz = 1$ as $\frac{1}{z} = xy$.
+Step 2: Substitute the value of $\frac{1}{z}$ into the equation $x + \frac{1}{z} = 5$, resulting in $x + xy = 5$ then $x(1 + y) = 5$.
+Step 3: Solve for $\frac{1}{x} = \frac{1 + y}{5}$.
+Step 4: Substitute the value of $\frac{1}{x}$ into the equation $y + \frac{1}{x} = 29$, leading to $y + \frac{1+y}{5} = 29$.
+Step 5: Solve for $y$, getting $y = 24$.
+Step 6: Substitute the value of $y$ back into the equations to find $x = \frac{1}{5}$ and $z = \frac{5}{24}$.
+Step 7: Find $z + \frac{1}{y} = \frac{5}{24} + \frac{1}{24} = \frac{1}{4}$.
+Step 8: The rational $p = \frac{1}{4}$ can be expressed as $p = \frac{m}{n}$ where $m = 1$ and $n = 4$. Hence $m + n = 5$.
+
+## Request skills
+### Thoughts 1
+The skill to rewrite and substitute variables into equations is crucial for solving this problem efficiently. The ability to use algebraic substitution simplifies the problem greatly.
+
+### Code 1
+```isabelle
+lemma substitute_and_solve:
+  fixes x y :: real
+  assumes "x * (1 + y) = 5" "y + 1 / x = 29"
+  shows "y = 24 \<and> x = 1 / 5"
+```
+
+### Thoughts 2
+Understanding of rational numbers and their properties is essential to conclude that $m + n = 5$.
+
+### Code 2
+```isabelle
+lemma rational_sum:
+  fixes p :: rat
+  assumes "p = 1 / 4"
+  shows "let (m, n) = quotient_of p in m + n = 5"
+```
+
+### Thoughts 3
+A lemma can be useful for step 3 which remove any denominator that not equal to zero by multiply the denominator in both size of the equation
+
+### Code 3
+```isabelle
+lemma cancel_div:
+  fixes x a b c:: real
+  assumes "x > 0" "a + b / x = c"
+  shows "a * x + b = c * x"
+```

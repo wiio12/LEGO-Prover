@@ -1,0 +1,32 @@
+## Problems
+For a positive real number x, show that $2 - \sqrt{2} \geq 2 - x - \frac{1}{2x}$.
+
+## Informal proof
+First notice that $2x$ is positive. It suffices to show $\sqrt{2} \leq x + \frac{1}{2x}$. Let $y = \sqrt{2}$. $y*y = 2$. Then $2x*x + 1 - 2x * \sqrt{2} = y*y * x*x + 1 - 2xy = (xy - 1)^2 \geq 0$. Also notice that $2x*x + 1 - 2x * \sqrt{2} = 2x * (x + \frac{1}{2x} - \sqrt{2})$. Therefore $x + \frac{1}{2x} - \sqrt{2} \geq 0$, given $2x > 0$. Rearranging terms, we see that the required inequality holds.
+
+## Formal statement
+theorem
+  fixes x :: real
+  assumes "x > 0"
+  shows "2 - sqrt 2 \<ge> 2 - x - 1/ (2 * x)"
+
+## Structured informal proof
+Step 1: Recognize that $ 2x $ is positive because $ x > 0 $.
+Step 2: Our goal is to show that $ 2 - \sqrt{2} \geq 2 - x - \frac{1}{2x} $, which simplifies to $ \sqrt{2} \leq x + \frac{1}{2x} $.
+Step 3: Let $ y = \sqrt{2} $ and note that $ y^2 = 2 $.
+Step 4: Calculate $ 2x^2 + 1 - 2x \sqrt{2} = y*y * x*x + 1 - 2xy =  (y \times x - 1)^2 \geq 0 $.
+Step 5: Notice that $ 2x^2 + 1 - 2x \sqrt{2} = 2x * (x + \frac{1}{2x} - \sqrt{2}) $.
+Step 6: Since $ 2x^2 + 1 - 2x \sqrt{2} \geq 0 $ and $ 2x > 0 $, then $ x + \frac{1}{2x} - \sqrt{2} \geq 0 $.
+Step 7: Rearrange the terms to arrive at the desired inequality $ 2 - \sqrt{2} \geq 2 - x - \frac{1}{2x} $.
+
+## Request skills
+### Thoughts 1
+The proof also involves inequalities that we rearrange in Steps 5-7. Thus, skill in manipulating inequalities will be helpful.
+
+### Code 1
+```isabelle
+lemma inequality_rearrangement:
+  fixes x :: real
+  assumes "x > 0"
+  shows "2 * x^2 + 1 - 2 * x * sqrt 2 \<ge> 0"
+```

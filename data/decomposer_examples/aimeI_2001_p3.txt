@@ -1,0 +1,48 @@
+## Problems
+Given that  $$ \begin{align*}x_{1}&=211,\\ x_{2}&=375,\\ x_{3}&=420,\\ x_{4}&=523,\ \text{and}\\ x_{n}&=x_{n-1}-x_{n-2}+x_{n-3}-x_{n-4}\ \text{when}\ n\geq5, \end{align*} $$  find the value of $x_{531}+x_{753}+x_{975}$. Show that it is 898.
+
+## Informal proof
+We find that $x_5 = 267$ by the recursive formula. Summing the [[recursion]]s  $$\begin{align*} x_{n}&=x_{n-1}-x_{n-2}+x_{n-3}-x_{n-4} \\ x_{n-1}&=x_{n-2}-x_{n-3}+x_{n-4}-x_{n-5} \end{align*}$$  yields $x_{n} = -x_{n-5}$. Thus $x_n = (-1)^k x_{n-5k}$. Since $531 = 106 \cdot 5 + 1,\ 753 = 150 \cdot 5 + 3,\ 975 = 194 \cdot 5 + 5$, it follows that  $$x_{531} + x_{753} + x_{975} = (-1)^{106} x_1 + (-1)^{150} x_3 + (-1)^{194} x_5 = 211 + 420 + 267 = 898.$$
+
+## Formal statement
+```isabelle
+theorem
+  fixes x :: "nat \<Rightarrow> int"
+  assumes h0 : "x 1 = 211"
+    and h1 : "x 2 = 375"
+    and h2 : "x 3 = 420"
+    and h3 : "x 4 = 523"
+    and h4 : "\<And>(n::nat). ((n\<ge>5) \<Longrightarrow> (x n = x (n-1) - x (n-2) + x (n-3) - x (n-4)))"
+  shows "x 531 + x 753 + x 975 = 898"
+```
+
+## Structured informal proof
+Step 1: Prove that x_{n+1} = -x_{n-4} for n ≥ 5. This is derived from combining the recurrence relation for x_n and x_{n-1}.
+Step 2: Prove that x_{5*(2*k) + j} = x_j for k, j ≥ 1 using induction on k.
+Step 2.1: Utilizing the algebraic manipulations to reformat the indices.
+Step 2.2: Using the proved properties to finalize this induction step.
+Step 3: Utilize the proven properties to find the value of x_531, x_753, and x_975.
+Step 4: Sum the values to prove the theorem.
+
+## Request skills
+### Thoughts 1
+Being able to understand and work with recursive sequences is essential, as is the ability to simplify complex equations.
+
+### Code 1
+```isabelle
+lemma recurrence_relation_property:
+  fixes x :: "nat \<Rightarrow> int"
+  assumes "\<And>(n::nat). ((n\<ge>5) \<Longrightarrow> (x n = x (n-1) - x (n-2) + x (n-3) - x (n-4)))"
+  shows "\<And>(n::nat). (n \<ge> 5 \<Longrightarrow> x n = - x (n-5))"
+```
+
+### Thoughts 2
+Skill in algebraic manipulations would be useful for proving the relation $ x_n = (-1)^k \times x_{n-5k} $.
+
+### Code 2
+```isabelle
+lemma general_recurrence_formula:
+  fixes x :: "nat \<Rightarrow> int" and k :: nat
+  assumes "\<And>(n::nat). (n \<ge> 5 \<Longrightarrow> x n = - x (n-5))"
+  shows "x (5*k + n) = (-1)^k * x n"
+```

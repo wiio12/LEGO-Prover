@@ -1,0 +1,49 @@
+## Problems
+What positive two-digit integer is exactly twice the sum of its digits? Show that it is 18.
+
+## Informal proof
+Step 1. Simplify $10a + b = 2(a+b)$ to get $8a = b$.
+Step 2: Apply the constraint that $a$ is at least 1 to get that $b$ is at least 8.
+Step 3: Use the natural number condition for $a$ and $b$ to argue that $b = 8$ and $a = 1$ are the only viable solutions that satisfy the equation and constraints.
+Step 4: Conclude that the two-digit integer is $18$ as $10 * 1 + 8 = 18$.
+
+## Formal statement
+```isabelle
+theorem mathd_numbertheory_284:
+  fixes a b :: nat
+  assumes h0 : "1\<le>a \<and> a \<le>9 \<and> b \<le>9"
+    and h1 : "10 * a + b = 2 * (a+b)"
+  shows "10 * a + b = 18"
+```
+
+## Proof
+```isabelle
+theory mathd_numbertheory_284
+  imports Complex_Main
+begin
+
+(* no helper function required in this theorem *)
+
+(* formal statement copy from the input *)
+theorem mathd_numbertheory_284:
+  fixes a b :: nat
+  assumes h0 : "1\<le>a \<and> a \<le>9 \<and> b \<le>9"
+    and h1 : "10 * a + b = 2 * (a+b)"
+  shows "10 * a + b = 18"
+proof -
+  (* Step 1. Simplify $10a + b = 2(a+b)$ to get $8a = b$. *)
+  have c0: "8 * a = b" using h1 sledgehammer
+
+  (* Step 2: Apply the constraint that $a$ is at least 1 to get that $b$ is at least 8. *)
+  hence "b \<ge> 8" using h0 sledgehammer
+
+  (* Step 3: Use the natural number condition for $a$ and $b$ to argue that $b = 8$ and $a = 1$ are the only viable solutions that satisfy the equation and constraints. *)
+  hence c1:"b = 8" using h0 c0
+    sledgehammer
+  hence "a = 1" using c0 sledgehammer
+
+  (* Step 4: Conclude that the two-digit integer is $18$ as $10 * 1 + 8 = 18$. *)
+  then show ?thesis using c1 sledgehammer
+qed
+```
+

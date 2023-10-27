@@ -1,0 +1,1 @@
+This skill demonstrates the property of any non-zero real number that when it is multiplied by its reciprocal, the result is 1. This is a fundamental property of division and multiplication in the field of real numbers. This skill can be used in any context where this property needs to be proven or used.

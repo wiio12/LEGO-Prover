@@ -1,0 +1,1 @@
+This skill is a mathematical property that states that if `x mod n = a`, then the modulus of the power of `(x + b)` and `(a + b)` with respect to `n` are equal. This skill can be used in any context where the modulus of the power of two numbers is required.

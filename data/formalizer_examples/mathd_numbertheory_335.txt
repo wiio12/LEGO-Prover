@@ -1,0 +1,44 @@
+## Problems
+When Rachel divides her favorite number by 7, she gets a remainder of 5. What will the remainder be if she multiplies her favorite number by 5 and then divides by 7? Show that it is 4.
+
+## Informal proof
+Step 1: Define Rachel's favorite number as $ n $.
+Step 2. since $n \equiv 5 \pmod{7}$, so $5n \equiv 5 \cdot 5 \equiv 25 \pmod{7}$
+Step 3: Use modular arithmetic to simplify $ 5n (\text{mod} 7) $ into 4.
+Step 4: Conclude that the remainder will be 4.
+
+## Formal statement
+```isabelle
+theorem mathd_numbertheory_335:
+  fixes n :: nat
+  assumes h0 : "n mod 7 = 5"
+  shows "(5 * n) mod 7 = 4"
+```
+
+## Proof
+```isabelle
+theory mathd_numbertheory_335
+  imports Complex_Main
+begin
+
+(* no helper function required in this theorem *)
+
+(* formal statement copy from the input *)
+theorem mathd_numbertheory_335:
+  fixes n :: nat
+  assumes h0 : "n mod 7 = 5"
+  shows "(5 * n) mod 7 = 4"
+proof -
+  (* Step 1. since $n \equiv 5 \pmod{7}$, so $5n \equiv 5 \cdot 5 \equiv 25 \equiv 4 \pmod{7}$. *)
+  have c0:"(5 * n) mod 7 = (5 * 5) mod 7" using h0
+    sledgehammer
+  (* Step 3: Use modular arithmetic to simplify $ 5n (\text{mod} 7) $ into 4. *)
+  then have "\<dots> = 4" sledgehammer
+  then have "(5 * n) mod 7 = 4" using c0 
+
+  (* Step 4: Conclude that the remainder will be 4. *)
+  then show ?thesis sledgehammer
+qed
+
+end
+```

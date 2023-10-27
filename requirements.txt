@@ -1,0 +1,14 @@
+tqdm
+langchain
+openai
+chardet
+chromadb
+tiktoken
+requests
+setuptools
+psutil
+grpcio
+grpcio-tools
+protobuf
+func_timeout
+pytz

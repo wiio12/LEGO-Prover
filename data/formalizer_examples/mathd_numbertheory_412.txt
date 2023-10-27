@@ -1,0 +1,69 @@
+## Problems
+If $x \equiv 4 \pmod{19}$ and $y \equiv 7 \pmod{19}$, then find the remainder when $(x + 1)^2 (y + 5)^3$ is divided by 19. Show that it is 13.
+
+## Informal proof
+Step 1: Compute \((x + 1)^2 \mod 19\) using the lemma 'mod_add_power'. It turns out to be \(5^2 \mod 19\).Step 3: Simplify the terms to 25 and 1728, respectively.
+Step 2: Compute \((y + 5)^3 \mod 19\) using the lemma 'mod_add_power'. It turns out to be \(12^3 \mod 19\).
+Step 3: Use properties of modular multiplication to express \((x + 1)^2 \cdot (y + 5)^3 \mod 19\) in terms of \(c0\) and \(c1\).
+Step 4: Substitute \(c0\) and \(c1\) to find \((x+1)^2 \cdot (y+5)^3 \mod 19\) is \(13\).
+Step 5: Conclude \((x + 1)^2 \cdot (y + 5)^3 \mod 19 = 13\).
+
+## Formal statement
+```isabelle
+theorem mathd_numbertheory_412:
+  fixes x y :: nat
+  assumes h0 : "x mod 19 = (4:: nat)"
+    and h1 : "y mod 19 = (7:: nat)"
+  shows "(x+1)^2 * (y+5)^3 mod 19 = (13:: nat)"
+```
+
+## Proof
+```isabelle
+theory mathd_numbertheory_412
+imports Complex_Main 
+begin
+
+(* Lemma 1: Prove properties of modular arithmetic involving addition and exponentiation, this lemma will be useful for Step 2 in the main theorem, which involves computations in modulo 19 *)
+lemma mod_add_power:
+  fixes x n a b c :: nat
+  assumes "n > 0" "b > 0" "c > 0" "x mod n = a"
+  shows "((x + b)^c) mod n = ((a + b)^c) mod n"
+proof -
+  have "(x + b)^c mod n = ((x mod n) + b)^c mod n"
+    by (smt (verit) mod_add_left_eq power_mod)
+  also have "... = (a + b)^c mod n"
+    using assms(4) by auto
+  finally show ?thesis by auto
+qed
+
+(* formal statement copy from the input *)
+theorem mathd_numbertheory_412:
+  fixes x y :: nat
+  assumes h0 : "x mod 19 = (4:: nat)"
+    and h1 : "y mod 19 = (7:: nat)"
+  shows "(x+1)^2 * (y+5)^3 mod 19 = (13:: nat)"
+proof -
+  (* Step 1: Compute \((x + 1)^2 \mod 19\) using the lemma 'mod_add_power'. It turns out to be \(5^2 \mod 19\). *)
+  have c0: "(x+1)^2 mod 19 = 5^2 mod 19"
+    using mod_add_power[where x="x" and n=19 and b=1 and a=4 and c=2] h0 by simp
+
+  (* Step 2: Compute \((y + 5)^3 \mod 19\) using the lemma 'mod_add_power'. It turns out to be \(12^3 \mod 19\). *)
+  have c1: "(y+5)^3 mod 19 = 12^3 mod 19"
+    using mod_add_power[where x="y" and n=19 and b=5 and a=7 and c=3] h1 by simp
+
+  (* Step 3: Use properties of modular multiplication to express \((x + 1)^2 \cdot (y + 5)^3 \mod 19\) in terms of \(c0\) and \(c1\). *)
+  have "(x+1)^2 * (y+5)^3 mod 19 = ((x+1)^2 mod 19) * ((y+5)^3 mod 19) mod 19"
+    by (metis mod_mult_eq)
+  
+  (* Step 4: Substitute \(c0\) and \(c1\) to find \((x+1)^2 \cdot (y+5)^3 \mod 19\) is \(13\). *)
+  also have "... = 6 * 18 mod 19" unfolding c0 c1 by auto
+  (* &\equiv 13 *)
+  also have "... = 13" by auto
+
+  (* Step 5: Conclude \((x + 1)^2 \cdot (y + 5)^3 \mod 19 = 13\). *)
+  finally show ?thesis by auto
+qed
+
+end
+```
+
