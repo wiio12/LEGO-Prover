@@ -107,9 +107,9 @@ The parameters are as follows:
 
 If you find our work useful, please consider citing us!
 ```bibtex
-@misc{xin2023legoprover,
+@misc{wang2023legoprover,
       title={LEGO-Prover: Neural Theorem Proving with Growing Libraries}, 
-      author={Huajian Xin and Haiming Wang and Chuanyang Zheng and Lin Li and Zhengying Liu and Qingxing Cao and Yinya Huang and Jing Xiong and Han Shi and Enze Xie and Jian Yin and Zhenguo Li and Xiaodan Liang and Heng Liao},
+      author={Haiming Wang and Huajian Xin and Chuanyang Zheng and Lin Li and Zhengying Liu and Qingxing Cao and Yinya Huang and Jing Xiong and Han Shi and Enze Xie and Jian Yin and Zhenguo Li and Heng Liao and Xiaodan Liang},
       year={2023},
       eprint={2310.00656},
       archivePrefix={arXiv},
